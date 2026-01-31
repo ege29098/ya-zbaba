@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Fortnite?</title>
     <style>
         body {
@@ -16,14 +16,17 @@
             color: white;
             overflow: hidden;
         }
+
         h1 {
             margin-bottom: 30px;
         }
+
         #buttons {
             position: relative;
             width: 400px;
             height: 200px;
         }
+
         button {
             font-size: 20px;
             padding: 15px 30px;
@@ -32,12 +35,14 @@
             border-radius: 8px;
             position: absolute;
         }
+
         #yes {
             background-color: #2ecc71;
             left: 50px;
             top: 80px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
+
         #no {
             background-color: #e74c3c;
             right: 50px;
@@ -46,46 +51,53 @@
     </style>
 </head>
 <body>
-    <h1 id="question">Fortnite gelir misin?</h1>
+    <h1>Yağız Ders Çalışacak mı??</h1>
     <div id="buttons">
-        <button id="yes" onclick="yesClicked()">Evet</button>
+        <button id="yes">Evet</button>
         <button id="no">Hayır</button>
     </div>
+
     <script>
-        let yesScale = 1;
-        const noBtn = document.getElementById("no");
         const yesBtn = document.getElementById("yes");
+        const noBtn = document.getElementById("no");
         const container = document.getElementById("buttons");
+        let yesVisible = true;
 
-        // EVET butonuna basılınca hiçbir şey olmasın
+        // Evet butonu basılamaz
         yesBtn.addEventListener("click", () => {
-            yesClicked();
+            // Hiçbir şey yapma
         });
 
-        // Hayır butonuna her basıldığında Evet butonu büyüsün
-        noBtn.addEventListener("click", () => {
-            yesScale += 0.3;
-            yesBtn.style.transform = `scale(${yesScale})`;
+        // Evet mouse üstüne gelince kaçar
+        yesBtn.addEventListener("mouseenter", () => {
+            const maxX = container.clientWidth - yesBtn.offsetWidth;
+            const maxY = container.clientHeight - yesBtn.offsetHeight;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            yesBtn.style.left = randomX + "px";
+            yesBtn.style.top = randomY + "px";
+        });
 
-            if (yesScale >= 3) {
-                // EVET butonu tüm ekranı kaplasın
-                yesBtn.style.position = "fixed";
-                yesBtn.style.top = "0";
-                yesBtn.style.left = "0";
-                yesBtn.style.width = "100vw";
-                yesBtn.style.height = "100vh";
-                yesBtn.style.fontSize = "50px";
+        // Hayır butonu her saniye büyüsün
+        let scale = 1;
+        const growInterval = setInterval(() => {
+            scale += 0.05; // her saniye büyüme miktarı
+            noBtn.style.transform = `scale(${scale})`;
 
-                // Hayır butonu kaybolsun
-                noBtn.style.display = "none";
+            // Evet butonu kaybolacak boyuta ulaşınca
+            if (scale >= 3 && yesVisible) {
+                yesBtn.style.display = "none";
+                yesVisible = false;
             }
-        });
+        }, 1000);
 
-        function yesClicked() {
+        // Hayır basılınca mesaj
+        noBtn.addEventListener("click", () => {
+            clearInterval(growInterval); // büyüme durur
             document.body.innerHTML = `
                 <h1 style="font-size:40px;">Bende öyle tahmin etmiştim 😎</h1>
             `;
-        }
+        });
     </script>
 </body>
 </html>
